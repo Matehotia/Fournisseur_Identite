@@ -1,0 +1,4 @@
+-Initialisation de l'environnement: François / 5min
+-Conception table sql: Jaela / 40min
+-Mise à jour des tables: Jaela / 3min
+-
