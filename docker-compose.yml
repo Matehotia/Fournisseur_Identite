@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:14.10
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres14
+      - POSTGRES_DB=identity_provider
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./DB/script1.sql:/docker-entrypoint-initdb.d/script1.sql
+      - ./DB/script2.sql:/docker-entrypoint-initdb.d/script2.sql
+      - ./DB/script3.sql:/docker-entrypoint-initdb.d/script3.sql
+    networks:
+      - app-network
+  
+  app:
+    build:
+      context: api/
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__Default=Server=postgres;Port=5432;Database=identity_provider;User Id=postgres;Password=postgres14;
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
